@@ -17,11 +17,14 @@ import java.util.Enumeration;
 public class MainActivity extends AppCompatActivity {
 
     TextView info, infoip, msg;
+
     String message = "";
+
     ServerSocket serverSocket;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,9 +52,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//inner class to send and receive msg
     private class SocketServerThread extends Thread {
 
-        static final int SocketServerPORT = 8080;
+        static final int SocketServerPORT = 3030;
         int count = 0;
 
         @Override
@@ -62,8 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 serverSocket = new ServerSocket(SocketServerPORT);
-                MainActivity.this.runOnUiThread(new Runnable() {
 
+                MainActivity.this.runOnUiThread(new Runnable()
+                {
                     @Override
                     public void run() {
                         info.setText("I'm waiting here: "
@@ -71,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                while (true) {
+                while (true)
+                {
                     socket = serverSocket.accept();
                     dataInputStream = new DataInputStream(
                             socket.getInputStream());
@@ -88,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
                             + ":" + socket.getPort() + "\n"
                             + "Msg from client: " + messageFromClient + "\n";
 
-                    MainActivity.this.runOnUiThread(new Runnable() {
-
+                    MainActivity.this.runOnUiThread(new Runnable()
+                    {
                         @Override
                         public void run() {
                             msg.setText(message);
@@ -144,17 +150,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private String getIpAddress() {
+//function to get IP Address of the server
+    private String getIpAddress()
+    {
         String ip = "";
+
         try {
             Enumeration<NetworkInterface> enumNetworkInterfaces = NetworkInterface
                     .getNetworkInterfaces();
-            while (enumNetworkInterfaces.hasMoreElements()) {
+            while (enumNetworkInterfaces.hasMoreElements())
+            {
                 NetworkInterface networkInterface = enumNetworkInterfaces
                         .nextElement();
                 Enumeration<InetAddress> enumInetAddress = networkInterface
                         .getInetAddresses();
-                while (enumInetAddress.hasMoreElements()) {
+
+                while (enumInetAddress.hasMoreElements())
+                {
                     InetAddress inetAddress = enumInetAddress.nextElement();
 
                     if (inetAddress.isSiteLocalAddress()) {
