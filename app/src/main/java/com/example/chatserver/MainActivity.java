@@ -23,7 +23,7 @@ import java.util.Enumeration;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView info, infoip, msg;
+    TextView info, infoip, chatHistory;
     TextView feed;
 
     EditText msgText;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         info = (TextView) findViewById(R.id.info);
         infoip = (TextView) findViewById(R.id.infoip);
-        msg = (TextView) findViewById(R.id.msg);
+        chatHistory = (TextView) findViewById(R.id.chatHistory);
         feed = (TextView) findViewById(R.id.feed);
 
         msgText = findViewById(R.id.msgText);
@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-//inner class to send and receive msg
+//inner class to send and receive message
     private class SocketServerThread extends Thread
     {
         static final int SocketServerPORT = 3399;
-        int count = 0;
+        int count = 0;x
 
         @Override
         public void run() {
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         @Override
                         public void run() {
-                            msg.setText(message);
+                            chatHistory.setText(message);
                         }
                     });
 
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void run() {
-                        msg.setText(errMsg);
+                        chatHistory.setText(errMsg);
                     }
                 });
 
