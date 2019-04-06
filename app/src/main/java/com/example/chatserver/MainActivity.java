@@ -1,12 +1,19 @@
 package com.example.chatserver;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.Formatter;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -17,6 +24,10 @@ import java.util.Enumeration;
 public class MainActivity extends AppCompatActivity {
 
     TextView info, infoip, msg;
+    TextView feed;
+
+    EditText msgText;
+    Button msgSendBtn;
 
     String message = "";
 
@@ -31,31 +42,59 @@ public class MainActivity extends AppCompatActivity {
         info = (TextView) findViewById(R.id.info);
         infoip = (TextView) findViewById(R.id.infoip);
         msg = (TextView) findViewById(R.id.msg);
+        feed = (TextView) findViewById(R.id.feed);
 
-        infoip.setText(getIpAddress());
+        msgText = findViewById(R.id.msgText);
+        msgSendBtn = findViewById(R.id.msgSendBtn);
 
-        Thread socketServerThread = new Thread(new SocketServerThread());
-        socketServerThread.start();
-    }
+    //handling IPs
+        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        String WifiIP = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+        String hotspotIP = "192.168.43.1";
 
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+    //checking if hotspot is ON or OFF
+        Boolean hostpostStatus = isHostspotOn(this);
+        if(!hostpostStatus) //hotspot is OFF
+        {
+            feed.setText("Mobile Hotspot is OFF. Please start Hotspot and restart the App");
+        }
+        else // hotspot is ON //all izz well
+        {
+            infoip.setText("IP: " + hotspotIP);
+
+        //handling socket
+            Thread socketServerThread = new Thread(new SocketServerThread());
+            socketServerThread.start();
+
+        //on clicking on send msg button
+            msgSendBtn.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+
+                }
+            });
         }
     }
 
-//inner class to send and receive msg
-    private class SocketServerThread extends Thread {
+//check whether wifi hotspot on or off
+    public static boolean isHostspotOn(Context context) {
+        WifiManager wifimanager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+        try {
+            Method method = wifimanager.getClass().getDeclaredMethod("isWifiApEnabled");
+            method.setAccessible(true);
+            return (Boolean) method.invoke(wifimanager);
+        }
+        catch (Throwable ignored) {}
+        return false;
+    }
 
-        static final int SocketServerPORT = 3030;
+//inner class to send and receive msg
+    private class SocketServerThread extends Thread
+    {
+        static final int SocketServerPORT = 3399;
         int count = 0;
 
         @Override
@@ -70,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.runOnUiThread(new Runnable()
                 {
                     @Override
-                    public void run() {
-                        info.setText("Port: "
-                                + serverSocket.getLocalPort());
+                    public void run()
+                    {
+                        info.setText("Port: " + serverSocket.getLocalPort());
                     }
                 });
 
@@ -123,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         socket.close();
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
@@ -132,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         dataInputStream.close();
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
@@ -141,13 +178,11 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         dataOutputStream.close();
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
             }
         }
-
     }
 
 //function to get IP Address of the server
@@ -155,7 +190,8 @@ public class MainActivity extends AppCompatActivity {
     {
         String ip = "";
 
-        try {
+        try
+        {
             Enumeration<NetworkInterface> enumNetworkInterfaces = NetworkInterface
                     .getNetworkInterfaces();
             while (enumNetworkInterfaces.hasMoreElements())
@@ -175,13 +211,31 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-
-        } catch (SocketException e) {
-            // TODO Auto-generated catch block
+        }
+        catch (SocketException e)
+        {
             e.printStackTrace();
-            ip += "Something Wrong! " + e.toString() + "\n";
+            ip = "Something went wrong!";
         }
 
         return ip;
+    }
+
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if (serverSocket != null)
+        {
+            try
+            {
+                serverSocket.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 }

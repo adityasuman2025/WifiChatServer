@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10px"
         android:text="Server Details"
-        android:textSize="65px"
+        android:textSize="60px"
+        android:textStyle="bold"
         android:textColor="@color/colorPrimary"
         android:layout_below="@+id/title"/>
 
@@ -45,7 +46,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/infoip"
-        android:text="error"
         android:textColor="@android:color/holo_red_dark"
         android:textAlignment="center"
         android:textSize="45px"/>
@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/infoip"
+        android:layout_below="@+id/feed"
         android:layout_above="@+id/sendMsgArea">
         <ScrollView
             android:layout_width="match_parent"
