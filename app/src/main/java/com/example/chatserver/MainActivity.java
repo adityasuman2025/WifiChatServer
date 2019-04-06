@@ -103,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
             DataInputStream dataInputStream = null;
             DataOutputStream dataOutputStream = null;
 
-            try {
+            try
+            {
                 serverSocket = new ServerSocket(SocketServerPORT);
 
                 MainActivity.this.runOnUiThread(new Runnable()
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 while (true)
                 {
                     socket = serverSocket.accept();
+
                     dataInputStream = new DataInputStream(
                             socket.getInputStream());
                     dataOutputStream = new DataOutputStream(
@@ -129,9 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     messageFromClient = dataInputStream.readUTF();
 
                     count++;
-                    message += "#" + count + " from " + socket.getInetAddress()
-                            + ":" + socket.getPort() + "\n"
-                            + "Msg from client: " + messageFromClient + "\n";
+                    message += "Msg from client: " + socket.getInetAddress() + ":" + socket.getPort() + "\n\t\t\t" + messageFromClient + "\n";
 
                     MainActivity.this.runOnUiThread(new Runnable()
                     {
@@ -145,9 +145,11 @@ public class MainActivity extends AppCompatActivity {
                     dataOutputStream.writeUTF(msgReply);
 
                 }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
+            }
+            catch (IOException e)
+            {
                 e.printStackTrace();
+
                 final String errMsg = e.toString();
                 MainActivity.this.runOnUiThread(new Runnable() {
 
@@ -157,7 +159,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-            } finally {
+            } finally
+            {
                 if (socket != null) {
                     try {
                         socket.close();
@@ -220,7 +223,6 @@ public class MainActivity extends AppCompatActivity {
 
         return ip;
     }
-
 
     @Override
     protected void onDestroy()
