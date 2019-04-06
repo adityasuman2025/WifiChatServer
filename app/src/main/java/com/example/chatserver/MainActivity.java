@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private class SocketServerThread extends Thread
     {
         static final int SocketServerPORT = 3399;
-        int count = 0;x
+        int count = 0;
 
         @Override
         public void run() {
