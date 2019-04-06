@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     @Override
                     public void run() {
-                        info.setText("I'm waiting here: "
+                        info.setText("Port: "
                                 + serverSocket.getLocalPort());
                     }
                 });
@@ -170,12 +170,10 @@ public class MainActivity extends AppCompatActivity {
                     InetAddress inetAddress = enumInetAddress.nextElement();
 
                     if (inetAddress.isSiteLocalAddress()) {
-                        ip += "SiteLocalAddress: "
+                        ip += "IP Address: "
                                 + inetAddress.getHostAddress() + "\n";
                     }
-
                 }
-
             }
 
         } catch (SocketException e) {
