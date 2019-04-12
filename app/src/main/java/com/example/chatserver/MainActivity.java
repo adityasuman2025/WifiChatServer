@@ -66,16 +66,6 @@ public class MainActivity extends AppCompatActivity {
         //handling socket
             Thread socketServerThread = new Thread(new SocketServerThread());
             socketServerThread.start();
-
-        //on clicking on send msg button
-            msgSendBtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-
-                }
-            });
         }
     }
 
